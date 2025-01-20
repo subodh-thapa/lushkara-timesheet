@@ -66,7 +66,7 @@ export class AppComponent{// implements OnInit{
       reader.onload = () => {
         let csvData = <string>reader.result;
         let csvToRowArray = csvData.split("\n");
-        for (let index = 2; index < csvToRowArray.length; index++) {
+        for (let index = 0; index < csvToRowArray.length; index++) {
           let row = csvToRowArray[index].split(",");
           //console.log(row)
           const timesheet =new TimeSheet(row[0],row[1], row[2].trim());
