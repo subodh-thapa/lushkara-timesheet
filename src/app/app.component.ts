@@ -22,6 +22,7 @@ export class AppComponent{// implements OnInit{
   employeeTimeSheet : Employee[]=[]
   shifts: Shift[] = [];
   totalHours: string='';
+  employeeName = '';
  
 
   // ngOnInit() {
@@ -47,11 +48,8 @@ export class AppComponent{// implements OnInit{
     this.totalHours = this.shifts.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.totalShiftHours;
     }, 0).toFixed(2);
-      console.log('this.employeeTimeSheet');
-      // console.log(this.employeeTimeSheet);
-      // console.log(this.timesheets);
-      console.log(this.employeeTimeSheet[0].shifts);
-      //console.log(this.totalHours);
+    this.employeeName = this.employeeTimeSheet[1].name; // need to fix this
+  
   }  
 
   csvInputChange($event: any) {
