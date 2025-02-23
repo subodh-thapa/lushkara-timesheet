@@ -23,13 +23,14 @@ export class AppComponent{// implements OnInit{
   shifts: Shift[] = [];
   totalHours: string='';
   employeeName = '';
- 
+  errorMessage= false;
 
   // ngOnInit() {
   //   this.getHours();
   // }
 
   public getHours() {
+    console.log(this.timesheets)
     const shiftList: Shift[]=[];// reset for every click
     for(const employee of this.employeesList){
       const employeeTimeSheet = this.timesheets.filter(timesheet=> timesheet.employee === employee);
@@ -48,11 +49,11 @@ export class AppComponent{// implements OnInit{
     this.totalHours = this.shifts.reduce((accumulator, currentValue) => {
       return accumulator + currentValue.totalShiftHours;
     }, 0).toFixed(2);
-    this.employeeName = this.employeeTimeSheet[1].name; // need to fix this
-  
+    this.employeeName = this.timesheets[1].employee; // need to fix this
   }  
 
   csvInputChange($event: any) {
+    this.errorMessage= false;
     let files = $event.srcElement.files;
 
     if (this.isValidCSVFile(files[0])) {
@@ -64,18 +65,27 @@ export class AppComponent{// implements OnInit{
       reader.onload = () => {
         let csvData = <string>reader.result;
         let csvToRowArray = csvData.split("\n");
-        for (let index = 0; index < csvToRowArray.length; index++) {
+        //escape 
+        for (let index = 1; index < csvToRowArray.length; index++) {
           let row = csvToRowArray[index].split(",");
           //console.log(row)
-          const timesheet =new TimeSheet(row[0],row[1], row[2].trim());
-          this.timesheets.push(timesheet);
-          this.shiftDates.add(timesheet.dateTime.toDateString());
-          this.employeesList.add(timesheet.employee);
+          //let timesheet;
+          try{
+            const timesheet =new TimeSheet(row[0],row[1], row[2].trim());
+            //console.log(timesheet)
+            this.timesheets.push(timesheet);
+            this.shiftDates.add(timesheet.dateTime.toDateString());
+            this.employeesList.add(timesheet.employee);
+          }catch(error){
+            console.log('Error reading file')
+            this.errorMessage= true;
+          }
         }
       };
-     // console.log(this.timesheets)
+      //console.log(this.timesheets)
 
       reader.onerror = function () {
+        //this.timesheets=true;
         console.log('error is occured while reading file!');
       };
 
@@ -122,7 +132,7 @@ export class Shift{
 }
 
 export class Employee{
- name: string;
+ name: string;  
  shifts: Shift[]=[];
  totalTimeSheetHours:number =0;
 

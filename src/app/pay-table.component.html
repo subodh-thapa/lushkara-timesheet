@@ -1,6 +1,5 @@
 <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="csvInputChange($event)" accept=".csv"/>
 <button mat-flat-button color="primary" (click)="csvInput.click()">Choose Spreadsheet File (CSV)</button>
-
 <table mat-table [dataSource]="shifts" class="mat-elevation-z8">
     <!-- Position Column -->
     <!-- <ng-container matColumnDef="date">
@@ -36,10 +35,12 @@
         *matRowDef="let row; columns: displayedColumns;"
     ></tr>
   </table>  
-  <div class="total">
-    <span>Total Hours for {{employeeName}}: {{totalHours}}</span>
+  <div class="total" *ngIf="timesheets.length>0 && !errorMessage">
+    <span>Total Hours for <b>{{employeeName}}</b>: {{totalHours}} Hours</span>
     <button mat-stroked-button (click)="getHours()" class="button">Get Shift Totals</button>
     <!-- <span class="total-hours">Total Hours: {{}}</span> -->
   </div>
+  <span style='color:red' *ngIf="errorMessage"><b>** Error</b> Upload correct Excel file **</span>
+
 
 
